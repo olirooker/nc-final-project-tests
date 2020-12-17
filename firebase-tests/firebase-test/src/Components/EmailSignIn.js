@@ -1,18 +1,21 @@
 import React, { Component } from "react";
-import firebase from "firebase";
+import firebase from "../Firebase.js";
 
 class EmailSignIn extends Component {
   state = {
     isLoggedIn: false,
     email: "",
     password: "",
+    photoURL: null,
+    uid: '',
   };
 
   handleChange = (event) => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
   };
-  handleSubmit = (event) => {
+
+  handleSignIn = (event) => {
     const { email, password } = this.state;
     event.preventDefault();
     firebase
@@ -20,7 +23,9 @@ class EmailSignIn extends Component {
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
         console.log(user);
-        this.setState({ isLoggedIn: true });
+        const { photoURL, uid } = firebase.auth().currentUser;
+
+        this.setState({ isLoggedIn: true, photoURL, uid, });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -30,11 +35,27 @@ class EmailSignIn extends Component {
       });
     this.setState({ email: "", password: "" });
   };
+
+  handleSignOut = () => {
+    console.log(firebase.auth(), 'auth obj')
+
+    firebase.auth().signOut().then((user) => {
+      // Sign-out successful.
+      console.log(user)
+      const { email, photoURL, uid } = firebase.auth().currentUser;
+      this.setState({ isLoggedIn: false, email, photoURL, uid });
+
+    }).catch(function (error) {
+      // An error happened.
+      console.log(error)
+    });
+  };
+
   render() {
     return (
       <div className="login">
         <h2>Log In</h2>
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <label>
             Email
             <input
@@ -53,11 +74,11 @@ class EmailSignIn extends Component {
               onChange={this.handleChange}
             />
           </label>
-          {this.state.isLoggedIn ? (
-            <button>Sign Out</button>
+          {this.state.uid ? (
+            <button onClick={this.handleSignOut}>Sign Out</button>
           ) : (
-            <button>Sign In</button>
-          )}
+              <button onClick={this.handleSignIn}>Sign In</button>
+            )}
         </form>
       </div>
     );

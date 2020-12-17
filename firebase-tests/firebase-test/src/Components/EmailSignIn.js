@@ -3,11 +3,14 @@ import firebase from "../Firebase.js";
 
 class EmailSignIn extends Component {
   state = {
-    isLoggedIn: false,
-    email: "",
-    password: "",
-    photoURL: null,
-    uid: '',
+    // input: {
+    email: '',
+    password: '',
+    // },
+    user: {
+      name: '',
+      uid: '',
+    },
   };
 
   handleChange = (event) => {
@@ -23,9 +26,8 @@ class EmailSignIn extends Component {
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
         console.log(user);
-        const { photoURL, uid } = firebase.auth().currentUser;
-
-        this.setState({ isLoggedIn: true, photoURL, uid, });
+        const { displayName, uid } = firebase.auth().currentUser;
+        this.setState({ user: { name: displayName, uid } });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -37,45 +39,47 @@ class EmailSignIn extends Component {
   };
 
   handleSignOut = () => {
-    console.log(firebase.auth(), 'auth obj')
-
     firebase.auth().signOut().then((user) => {
       // Sign-out successful.
-      console.log(user)
-      const { email, photoURL, uid } = firebase.auth().currentUser;
-      this.setState({ isLoggedIn: false, email, photoURL, uid });
-
-    }).catch(function (error) {
-      // An error happened.
-      console.log(error)
-    });
+      this.setState({ user: { name: '', uid: '' } });
+    })
+      .catch(function (error) {
+        // An error happened.
+        console.log(error)
+      });
   };
 
   render() {
+    const { email, password } = this.state;
+    const { name, uid } = this.state.user;
+
     return (
       <div className="login">
         <h2>Log In</h2>
         <form>
           <label>
-            Email
+            Email:
             <input
               type="email"
               name="email"
-              value={this.state.email}
+              value={email}
               onChange={this.handleChange}
             />
           </label>
           <label>
-            Password
+            Password:
             <input
               type="password"
               name="password"
-              value={this.state.password}
+              value={password}
               onChange={this.handleChange}
             />
           </label>
-          {this.state.uid ? (
-            <button onClick={this.handleSignOut}>Sign Out</button>
+          {uid ? (
+            <div>
+              <button onClick={this.handleSignOut}>Sign Out</button>
+              <p>Hello, {name}</p>
+            </div>
           ) : (
               <button onClick={this.handleSignIn}>Sign In</button>
             )}

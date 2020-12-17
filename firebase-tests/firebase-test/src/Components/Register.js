@@ -3,21 +3,29 @@ import firebase from "firebase";
 
 class Register extends Component {
   state = {
+    name: "",
     email: "",
     password: "",
   };
+
   handleChange = (event) => {
     const { value, name } = event.target;
     this.setState({ [name]: value });
   };
+
   handleSubmit = (event) => {
-    const { email, password } = this.state;
+    const { name, email, password } = this.state;
     event.preventDefault();
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((user) => {
         console.log(user);
+        const userInfo = firebase.auth().currentUser;
+        userInfo.updateProfile({
+          displayName: name,
+        })
+        // is the error handling correct here?
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -25,7 +33,7 @@ class Register extends Component {
         console.log(errorCode);
         console.log(errorMessage);
       });
-    this.setState({ email: "", password: "" });
+    this.setState({ name: "", email: "", password: "" });
   };
 
   render() {
@@ -35,7 +43,16 @@ class Register extends Component {
           <h2>Register</h2>
           <form onSubmit={this.handleSubmit}>
             <label>
-              Email
+              Name:
+              <input
+                type="text"
+                name="name"
+                value={this.state.name}
+                onChange={this.handleChange}
+              />
+            </label>
+            <label>
+              Email:
               <input
                 type="email"
                 name="email"
@@ -44,7 +61,7 @@ class Register extends Component {
               />
             </label>
             <label>
-              Password
+              Password:
               <input
                 type="password"
                 name="password"
@@ -58,6 +75,6 @@ class Register extends Component {
       </div>
     );
   }
-}
+};
 
 export default Register;

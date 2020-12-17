@@ -7,7 +7,6 @@ function App() {
   return (
     <div className="app">
       {/* <GoogleSignIn /> */}
-
       <Register />
       <EmailSignIn />
     </div>

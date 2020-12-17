@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { route } from './api';
+import { route, getToken } from './api';
 
 const Map = () => {
   // Create a reference to the HTML element we want to put the map on

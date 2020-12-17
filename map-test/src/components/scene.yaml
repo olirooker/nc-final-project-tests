@@ -17,6 +17,12 @@ sources:
     url_params:
       access_token: ACow0782S6e6aERvT1oj
 
+  fountains:
+    url: https://xyz.api.here.com/hub/spaces/FNEhm5Ew/tile/web/{z}_{x}_{y}
+    type: GeoJSON
+    url_params:
+      access_token: ACow0782S6e6aERvT1oj
+
 layers:
   earth:
     data: { source: xyz_osm }
@@ -31,6 +37,14 @@ layers:
       polygons:
         order: function() { return feature.sort_rank; }
         color: '#aaffaa'
+
+  fountains:
+    data: { source: fountains }
+    draw:
+      points:
+        color: purple
+        size: 15px
+        interactive: true
 
   water:
     data: { source: xyz_osm }

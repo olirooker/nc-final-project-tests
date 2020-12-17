@@ -4,8 +4,7 @@ import Map from './components/Map';
 function App() {
   return (
     <div className='App'>
-      {' '}
-      <Map />{' '}
+      <Map />
     </div>
   );
 }
@@ -13,6 +12,6 @@ function App() {
 export default App;
 
 // ('sxbrirKUnkWHob - sfgnRRAzOJXSTLF8KEIUnnyX0g7s;');
-// ('FNEhm5Ew');
+// ('FNEhm5Ew'); project title
 
-// ACow0782S6e6aERvT1oj - QA;
+// ACow0782S6e6aERvT1oj - QA;  authorization key

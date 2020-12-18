@@ -4,12 +4,12 @@ import firebase from "../Firebase.js";
 class EmailSignIn extends Component {
   state = {
     // input: {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     // },
     user: {
-      name: '',
-      uid: '',
+      name: "",
+      uid: "",
     },
   };
 
@@ -38,14 +38,18 @@ class EmailSignIn extends Component {
     this.setState({ email: "", password: "" });
   };
 
-  handleSignOut = () => {
-    firebase.auth().signOut().then((user) => {
-      // Sign-out successful.
-      this.setState({ user: { name: '', uid: '' } });
-    })
+  handleSignOut = (event) => {
+    event.preventDefault();
+    firebase
+      .auth()
+      .signOut()
+      .then((user) => {
+        // Sign-out successful.
+        this.setState({ user: { name: "", uid: "" } });
+      })
       .catch(function (error) {
         // An error happened.
-        console.log(error)
+        console.log(error);
       });
   };
 
@@ -81,8 +85,8 @@ class EmailSignIn extends Component {
               <p>Hello, {name}</p>
             </div>
           ) : (
-              <button onClick={this.handleSignIn}>Sign In</button>
-            )}
+            <button onClick={this.handleSignIn}>Sign In</button>
+          )}
         </form>
       </div>
     );

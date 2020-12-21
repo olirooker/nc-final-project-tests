@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "../Firebase";
+import firebase from "../FirebaseConfig.js";
 
 class PhoneSignIn extends Component {
   state = { phoneNumber: "", verificationCode: "" };

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "../Firebase.js";
+import firebase from "../FirebaseConfig.js";
 
 class EmailSignIn extends Component {
   state = {

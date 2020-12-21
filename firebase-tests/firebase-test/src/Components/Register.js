@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase from "firebase";
+import firebase from "../FirebaseConfig.js";
 
 class Register extends Component {
   state = {
@@ -24,7 +24,7 @@ class Register extends Component {
         const userInfo = firebase.auth().currentUser;
         userInfo.updateProfile({
           displayName: name,
-        })
+        });
         // is the error handling correct here?
       })
       .catch((error) => {
@@ -75,6 +75,6 @@ class Register extends Component {
       </div>
     );
   }
-};
+}
 
 export default Register;

@@ -1,3 +1,4 @@
+import PermissionButton from './PermissionButton';
 const { Component } = require('react');
 const {
   GoogleMap,
@@ -18,26 +19,47 @@ class NewMapContainer extends Component {
       destination: '',
       zoom: 16,
       center: { lat: 53.4808, lng: -2.2462 },
+      allowGPS: false,
+      enableGPSMessage: false,
     };
   }
-
+  // check if site GPS permission allowed. if yes, render map.
   componentDidMount() {
-    if ('geolocation' in navigator) {
-      console.log(' Available');
-      //change to watchPosition for live tracking
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.setState({
-          center: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          },
-        });
-      });
-    } else {
-      console.log('Not Available - please turn on GPS');
-    }
+    navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+      if (result.state === 'granted') {
+        console.log('GRANTED');
+        this.setLocation();
+      } else {
+        this.setState({ enableGPSMessage: true });
+        console.log('NOT GRANTED');
+      }
+    });
   }
 
+  // set users current location as map center
+  setLocation = () => {
+    //change to watchPosition for live tracking
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({
+        allowGPS: true,
+        enableGPSMessage: false,
+        center: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        },
+        origin: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        },
+      });
+    });
+  };
+
+  reportPermission = (permission) => {
+    console.log('Permission: ' + permission);
+  };
+
+  // sets state with response from google directions service
   directionsCallback = (response) => {
     console.log(response, '<<<RESPONSE');
 
@@ -52,6 +74,7 @@ class NewMapContainer extends Component {
     }
   };
 
+  //   watch what is entered into fields
   getOrigin = (ref) => {
     this.origin = ref;
   };
@@ -60,8 +83,14 @@ class NewMapContainer extends Component {
     this.destination = ref;
   };
 
+  // submits origin and destination  to directions service
   onClick = () => {
-    if (this.origin.value !== '' && this.destination.value !== '') {
+    if (this.origin.value === '' && this.state.origin !== '') {
+      this.setState(() => ({
+        origin: this.state.center,
+        destination: this.destination.value,
+      }));
+    } else if (this.origin.value !== '' && this.destination.value !== '') {
       this.setState(() => ({
         origin: this.origin.value,
         destination: this.destination.value,
@@ -71,6 +100,16 @@ class NewMapContainer extends Component {
 
   onMapClick = (...args) => {
     console.log('onClick args: ', args);
+  };
+
+  // checks if permission has been granted, if yes, re render with map and set center
+  permissionClick = () => {
+    navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+      if (result.state === 'granted') {
+        console.log('GRANTED');
+        this.setLocation();
+      }
+    });
   };
 
   render() {
@@ -89,6 +128,7 @@ class NewMapContainer extends Component {
                   className='form-control'
                   type='text'
                   ref={this.getOrigin}
+                  placeholder='current location'
                 />
               </div>
             </div>
@@ -117,81 +157,85 @@ class NewMapContainer extends Component {
         </div>
 
         <div className='map-container'>
-          <LoadScript googleMapsApiKey='AIzaSyC7qV9kdOaPE1VtixpR2clHPkTATkUPMwk'>
-            <GoogleMap
-              // required
-              id='direction-example'
-              // required
-              mapContainerStyle={{
-                height: '600px',
-                width: '80%',
-              }}
-              // required
-              zoom={this.state.zoom}
-              // required
-              center={this.state.center}
-              // optional
-              onClick={this.onMapClick}
-              // optional
-              onLoad={(map) => {
-                console.log('DirectionsRenderer onLoad map: ', map);
-              }}
-              // optional
-              onUnmount={(map) => {
-                console.log('DirectionsRenderer onUnmount map: ', map);
-              }}
-            >
-              {this.state.destination !== '' && this.state.origin !== '' && (
-                <DirectionsService
-                  // required
-                  options={{
-                    destination: this.state.destination,
-                    origin: this.state.origin,
-                    travelMode: this.state.travelMode,
-                  }}
-                  // required
-                  callback={this.directionsCallback}
-                  // optional
-                  onLoad={(directionsService) => {
-                    console.log(
-                      'DirectionsService onLoad directionsService: ',
-                      directionsService
-                    );
-                  }}
-                  // optional
-                  onUnmount={(directionsService) => {
-                    console.log(
-                      'DirectionsService onUnmount directionsService: ',
-                      directionsService
-                    );
-                  }}
-                />
-              )}
+          {!this.state.allowGPS && this.state.enableGPSMessage ? (
+            <PermissionButton permissionClick={this.permissionClick} />
+          ) : (
+            <LoadScript googleMapsApiKey='AIzaSyC7qV9kdOaPE1VtixpR2clHPkTATkUPMwk'>
+              <GoogleMap
+                // required
+                id='direction-example'
+                // required
+                mapContainerStyle={{
+                  height: '600px',
+                  width: '80%',
+                }}
+                // required
+                zoom={this.state.zoom}
+                // required
+                center={this.state.center}
+                // optional
+                onClick={this.onMapClick}
+                // optional
+                onLoad={(map) => {
+                  console.log('DirectionsRenderer onLoad map: ', map);
+                }}
+                // optional
+                onUnmount={(map) => {
+                  console.log('DirectionsRenderer onUnmount map: ', map);
+                }}
+              >
+                {this.state.destination !== '' && this.state.origin !== '' && (
+                  <DirectionsService
+                    // required
+                    options={{
+                      destination: this.state.destination,
+                      origin: this.state.origin,
+                      travelMode: this.state.travelMode,
+                    }}
+                    // required
+                    callback={this.directionsCallback}
+                    // optional
+                    onLoad={(directionsService) => {
+                      console.log(
+                        'DirectionsService onLoad directionsService: ',
+                        directionsService
+                      );
+                    }}
+                    // optional
+                    onUnmount={(directionsService) => {
+                      console.log(
+                        'DirectionsService onUnmount directionsService: ',
+                        directionsService
+                      );
+                    }}
+                  />
+                )}
 
-              {this.state.response !== null && (
-                <DirectionsRenderer
-                  // required
-                  options={{
-                    directions: this.state.response,
-                  }}
-                  // optional
-                  onLoad={(directionsRenderer) => {
-                    console.log(
-                      'DirectionsRenderer onLoad directionsRenderer: ',
-                      directionsRenderer
-                    );
-                  }}
-                  // optional
-                  onUnmount={(directionsRenderer) => {
-                    console.log(
-                      'DirectionsRenderer onUnmount directionsRenderer: ',
-                      directionsRenderer
-                    );
-                  }}
-                />
-              )}
-            </GoogleMap>
-          </LoadScript>
+                {this.state.response !== null && (
+                  <DirectionsRenderer
+                    // required
+                    options={{
+                      directions: this.state.response,
+                    }}
+                    // optional
+                    onLoad={(directionsRenderer) => {
+                      console.log(
+                        'DirectionsRenderer onLoad directionsRenderer: ',
+                        directionsRenderer
+                      );
+                    }}
+                    // optional
+                    onUnmount={(directionsRenderer) => {
+                      console.log(
+                        'DirectionsRenderer onUnmount directionsRenderer: ',
+                        directionsRenderer
+                      );
+                    }}
+                  />
+                )}
+              </GoogleMap>
+            </LoadScript>
+          )}
         </div>
       </div>
     );

@@ -49,7 +49,7 @@ class SetHomeLocation extends Component {
 
   getHomeAddress = () => {
     fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.state.latitude},${this.state.longitude}&sensor=false&key=AIzaSyBS4YJ2CWwS7pwy3BHiln1uQU30PocEvdU`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.state.latitude},${this.state.longitude}&sensor=false&key=`
     )
       .then((response) => {
         return response.json();
@@ -82,10 +82,9 @@ class SetHomeLocation extends Component {
             <p>Longitude: {this.state.longitude}</p>
             <p>Home Address: {this.state.homeAddress}</p>
             <img
-              src={`https://maps.googleapis.com/maps/api/staticmap?center=${this.state.latitude},${this.state.longitude}&zoom=14&size=400x300&sensor=false&markers=color:red%7C${this.state.latitude},${this.state.longitude}&key=AIzaSyBS4YJ2CWwS7pwy3BHiln1uQU30PocEvdU`}
+              src={`https://maps.googleapis.com/maps/api/staticmap?center=${this.state.latitude},${this.state.longitude}&zoom=14&size=400x300&sensor=false&markers=color:red%7C${this.state.latitude},${this.state.longitude}&key=`}
               alt="home address on a map"
             />
-            {/* AIzaSyBS4YJ2CWwS7pwy3BHiln1uQU30PocEvdU */}
           </div>
         ) : (
           <div></div>

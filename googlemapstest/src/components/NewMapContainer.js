@@ -21,6 +21,23 @@ class NewMapContainer extends Component {
     };
   }
 
+  componentDidMount() {
+    if ('geolocation' in navigator) {
+      console.log(' Available');
+      //change to watchPosition for live tracking
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.setState({
+          center: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        });
+      });
+    } else {
+      console.log('Not Available - please turn on GPS');
+    }
+  }
+
   directionsCallback = (response) => {
     console.log(response, '<<<RESPONSE');
 

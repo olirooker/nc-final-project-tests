@@ -3,7 +3,7 @@ const {
   GoogleMap,
   LoadScript,
   DirectionsService,
-  DirectionsRenderer,
+  DirectionsRenderer
 } = require('@react-google-maps/api');
 const ScriptLoaded = require('@react-google-maps/api').default;
 
@@ -17,7 +17,7 @@ class NewMapContainer extends Component {
       origin: '',
       destination: '',
       zoom: 16,
-      center: { lat: 53.4808, lng: -2.2462 },
+      center: { lat: 53.4808, lng: -2.2462 }
     };
   }
 
@@ -29,8 +29,8 @@ class NewMapContainer extends Component {
         this.setState({
           center: {
             lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          },
+            lng: position.coords.longitude
+          }
         });
       });
     } else {
@@ -44,7 +44,7 @@ class NewMapContainer extends Component {
     if (response !== null) {
       if (response.status === 'OK') {
         this.setState(() => ({
-          response,
+          response
         }));
       } else {
         console.log('response: ', response);
@@ -64,7 +64,7 @@ class NewMapContainer extends Component {
     if (this.origin.value !== '' && this.destination.value !== '') {
       this.setState(() => ({
         origin: this.origin.value,
-        destination: this.destination.value,
+        destination: this.destination.value
       }));
     }
   };
@@ -124,7 +124,7 @@ class NewMapContainer extends Component {
               // required
               mapContainerStyle={{
                 height: '600px',
-                width: '80%',
+                width: '80%'
               }}
               // required
               zoom={this.state.zoom}
@@ -147,7 +147,7 @@ class NewMapContainer extends Component {
                   options={{
                     destination: this.state.destination,
                     origin: this.state.origin,
-                    travelMode: this.state.travelMode,
+                    travelMode: this.state.travelMode
                   }}
                   // required
                   callback={this.directionsCallback}
@@ -172,7 +172,7 @@ class NewMapContainer extends Component {
                 <DirectionsRenderer
                   // required
                   options={{
-                    directions: this.state.response,
+                    directions: this.state.response
                   }}
                   // optional
                   onLoad={(directionsRenderer) => {

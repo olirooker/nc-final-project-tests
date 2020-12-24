@@ -5,11 +5,11 @@ const route = () => {
   getToken().then((token) => {
     axios
       .get(
-        'https://router.hereapi.com/v8/routes?transportMode=car&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary',
+        'https://router.hereapi.com/v8/routes?transportMode=pedestrian&origin=52.5308,13.3847&destination=52.5264,13.3686&return=summary',
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       )
       .then((response) => {

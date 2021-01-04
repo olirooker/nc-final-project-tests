@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { auth, provider } from "../../FirebaseConfig.js";
+import { auth, provider } from "../FirebaseConfig.js";
 
 class GoogleSignIn extends Component {
   state = {

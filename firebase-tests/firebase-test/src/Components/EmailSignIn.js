@@ -36,6 +36,7 @@ class EmailSignIn extends Component {
         console.log(errorMessage);
       });
     this.setState({ email: "", password: "" });
+    console.log(this.state.user);
   };
 
   handleSignOut = (event) => {

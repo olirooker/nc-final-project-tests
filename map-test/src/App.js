@@ -1,10 +1,16 @@
 import './App.css';
 import Map from './components/Map';
+import Marker from './components/Marker';
+import NewMap from './components/NewMap';
 
 function App() {
   return (
     <div className='App'>
-      <Map />
+      <Map>
+        <Marker />
+      </Map>
+      {/* 
+      <NewMap /> */}
     </div>
   );
 }

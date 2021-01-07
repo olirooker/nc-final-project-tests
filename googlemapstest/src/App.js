@@ -5,12 +5,10 @@ import HeatMap from './components/HeatMap';
 import { LoadScript } from '@react-google-maps/api';
 
 function App() {
+  const API_KEY = process.env.REACT_APP_API_KEY;
   return (
     // <MapContainer />;
-    <LoadScript
-      googleMapsApiKey='AIzaSyC7qV9kdOaPE1VtixpR2clHPkTATkUPMwk'
-      libraries={['visualization']}
-    >
+    <LoadScript googleMapsApiKey={API_KEY} libraries={['visualization']}>
       <NewMapContainer />
       <HeatMap />
     </LoadScript>

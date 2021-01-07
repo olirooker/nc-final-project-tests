@@ -1,4 +1,3 @@
-import PermissionButton from './PermissionButton';
 const { Component } = require('react');
 const {
   Rectangle,
@@ -101,12 +100,12 @@ class NewMapContainer extends Component {
 
   // submits origin and destination  to directions service
   onClick = () => {
-    if (this.origin.value === '' && this.state.origin !== '') {
+    if (this.origin.value === '') {
       this.setState(() => ({
         origin: this.state.center,
         destination: this.destination.value
       }));
-    } else if (this.origin.value !== '' && this.destination.value !== '') {
+    } else {
       this.setState(() => ({
         origin: this.origin.value,
         destination: this.destination.value
@@ -277,90 +276,87 @@ class NewMapContainer extends Component {
           </button>
         </div>
         <div className='map-container'>
-          {!this.state.allowGPS && this.state.enableGPSMessage ? (
-            <PermissionButton permissionClick={this.permissionClick} />
-          ) : (
-            <GoogleMap
-              // required
-              id='direction-example'
-              // required
-              mapContainerStyle={{
-                height: '600px',
-                width: '80%'
-              }}
-              options={{
-                styles: modeNightStyle
-              }}
-              // required
-              zoom={this.state.zoom}
-              // required
-              center={this.state.center}
-              // optional
-              onClick={this.onMapClick}
-              // optional
-              onLoad={(map) => {
-                // console.log('DirectionsRenderer onLoad map: ', map);
-              }}
-              // optional
-              onUnmount={(map) => {
-                // console.log('DirectionsRenderer onUnmount map: ', map);
-              }}
-            >
-              {locations.map((location, id) => {
-                return <Circle key={id} center={location} options={options} />;
-              })}
-              <Rectangle bounds={this.state.bounds} />
-              <Marker position={this.state.center} />
-              {this.state.destination !== '' && this.state.origin !== '' && (
-                <DirectionsService
-                  // required
-                  options={{
-                    destination: this.state.destination,
-                    origin: this.state.origin,
-                    travelMode: this.state.travelMode
-                  }}
-                  // required
-                  callback={this.directionsCallback}
-                  // optional
-                  onLoad={(directionsService) => {
-                    // console.log(
-                    //   'DirectionsService onLoad directionsService: ',
-                    //   directionsService
-                    // );
-                  }}
-                  // optional
-                  onUnmount={(directionsService) => {
-                    // console.log(
-                    //   'DirectionsService onUnmount directionsService: ',
-                    //   directionsService
-                    // );
-                  }}
-                />
-              )}
+          <GoogleMap
+            // required
+            id='direction-example'
+            // required
+            mapContainerStyle={{
+              height: '600px',
+              width: '80%'
+            }}
+            options={{
+              styles: modeNightStyle
+            }}
+            // required
+            zoom={this.state.zoom}
+            // required
+            center={this.state.center}
+            // optional
+            onClick={this.onMapClick}
+            // optional
+            onLoad={(map) => {
+              // console.log('DirectionsRenderer onLoad map: ', map);
+            }}
+            // optional
+            onUnmount={(map) => {
+              // console.log('DirectionsRenderer onUnmount map: ', map);
+            }}
+          >
+            {locations.map((location, id) => {
+              return <Circle key={id} center={location} options={options} />;
+            })}
+            <Rectangle bounds={this.state.bounds} />
+            <Marker position={this.state.center} />
+            {this.state.destination !== '' && this.state.origin !== '' && (
+              <DirectionsService
+                // required
+                options={{
+                  destination: this.state.destination,
+                  origin: this.state.origin,
+                  travelMode: this.state.travelMode
+                }}
+                // required
+                callback={this.directionsCallback}
+                // optional
+                onLoad={(directionsService) => {
+                  // console.log(
+                  //   'DirectionsService onLoad directionsService: ',
+                  //   directionsService
+                  // );
+                }}
+                // optional
+                onUnmount={(directionsService) => {
+                  // console.log(
+                  //   'DirectionsService onUnmount directionsService: ',
+                  //   directionsService
+                  // );
+                }}
+              />
+            )}
 
-              {this.state.response !== null && (
-                <DirectionsRenderer
-                  // required
-                  options={{
-                    directions: this.state.response
-                  }}
-                  // optional
-                  onLoad={(directionsRenderer) => {
-                    // console.log(
-                    //   'DirectionsRenderer onLoad directionsRenderer: ',
-                    //   directionsRenderer
-                    // );
-                  }}
-                  // optional
-                  onUnmount={(directionsRenderer) => {
-                    // console.log(
-                    //   'DirectionsRenderer onUnmount directionsRenderer: ',
-                    //   directionsRenderer
-                    // );
-                  }}
-                />
-              )}
-            </GoogleMap>
+            {this.state.response !== null && (
+              <DirectionsRenderer
+                // required
+                options={{
+                  directions: this.state.response
+                }}
+                // optional
+                onLoad={(directionsRenderer) => {
+                  // console.log(
+                  //   'DirectionsRenderer onLoad directionsRenderer: ',
+                  //   directionsRenderer
+                  // );
+                }}
+                // optional
+                onUnmount={(directionsRenderer) => {
+                  // console.log(
+                  //   'DirectionsRenderer onUnmount directionsRenderer: ',
+                  //   directionsRenderer
+                  // );
+                }}
+              />
+            )}
+          </GoogleMap>
           )}
         </div>
       </div>
